@@ -16,18 +16,23 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 
 ## 2. How did you use AI as a teammate?
 
-- Which AI tools did you use on this project (for example: ChatGPT, Gemini, Copilot)?
-- Give one example of an AI suggestion that was correct (including what the AI suggested and how you verified the result).
-- Give one example of an AI suggestion that was incorrect or misleading (including what the AI suggested and how you verified the result).
+I used Claude Code (Anthropic's AI assistant) throughout this project to identify, explain, and fix bugs.
+
+**Correct AI suggestion — swapped hint messages:**
+The AI correctly identified that `check_guess` was returning "Go HIGHER!" when the guess was too high and "Go LOWER!" when the guess was too low — the exact backwards behavior I noticed when playing. It suggested swapping the two message strings inside the `if guess > secret` branches. I verified this by running `pytest tests/test_game_logic.py::test_too_high_message_says_go_lower` and confirming it passed, then tested manually in the live app by guessing a number I knew was too high and checking that the hint now correctly said "Go LOWER!".
+
+**Incorrect/misleading AI suggestion — the starter test assertions:**
+The AI's original starter tests compared the full return value of `check_guess` directly to a plain string like `assert result == "Win"`. This was misleading because `check_guess` returns a tuple `("Win", "🎉 Correct!")`, not just `"Win"`. Running pytest immediately showed all three starter tests failing with `AssertionError: assert ('Win', '...') == 'Win'`. I fixed each test by unpacking the tuple: `outcome, message = check_guess(...)` before asserting. This taught me that AI-generated tests need the same careful review as AI-generated code.
 
 ---
 
 ## 3. Debugging and testing your fixes
 
-- How did you decide whether a bug was really fixed?
-- Describe at least one test you ran (manual or using pytest)
-  and what it showed you about your code.
-- Did AI help you design or understand any tests? How?
+I decided a bug was truly fixed only when both a passing pytest test and a correct live-game interaction confirmed the new behavior.
+
+For the swapped hint bug, I wrote `test_too_high_message_says_go_lower` which calls `check_guess(60, 50)` and asserts `"LOWER" in message`. Before the fix the test failed; after swapping the strings it passed. I ran the full suite with `pytest tests/ -v` and confirmed all 6 tests passed with no regressions.
+
+For the blue-text range bug I verified it manually: switched to Easy in the sidebar and confirmed the banner changed from "1 and 100" to "1 and 20", then switched to Hard and saw "1 and 200". The AI helped design the targeted message-content tests by suggesting checking for the word "LOWER" or "HIGHER" inside the message string rather than comparing the full emoji-string exactly, which made the tests more readable and less brittle.
 
 ---
 
