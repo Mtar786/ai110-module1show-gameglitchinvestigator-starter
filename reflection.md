@@ -5,8 +5,12 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 ## 1. What was broken when you started?
 
 - What did the game look like the first time you ran it?
-- List at least two concrete bugs you noticed at the start  
+- List at least two concrete bugs you noticed at the start
   (for example: "the secret number kept changing" or "the hints were backwards").
+  the number was glitched when it said go lower for 4 i went 3 then it said go higher turns out number was 29 so the hints are switched
+  also when i switech to easy the blute text never chaned saying only from 1 to 20 still says 1 to 100
+  when i try to do new game it is stuck and does not change still says gamve over start new again
+
 
 ---
 
@@ -21,7 +25,7 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 ## 3. Debugging and testing your fixes
 
 - How did you decide whether a bug was really fixed?
-- Describe at least one test you ran (manual or using pytest)  
+- Describe at least one test you ran (manual or using pytest)
   and what it showed you about your code.
 - Did AI help you design or understand any tests? How?
 
