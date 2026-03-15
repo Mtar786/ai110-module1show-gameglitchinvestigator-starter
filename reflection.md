@@ -38,15 +38,18 @@ For the blue-text range bug I verified it manually: switched to Easy in the side
 
 ## 4. What did you learn about Streamlit and state?
 
-- In your own words, explain why the secret number kept changing in the original app.
-- How would you explain Streamlit "reruns" and session state to a friend who has never used Streamlit?
-- What change did you make that finally gave the game a stable secret number?
+The secret number kept changing because every time I clicked "Submit", Streamlit reran the entire script from top to bottom, and the original code called `random.randint()` at the top level with no guard. That meant a brand-new random number was picked on every interaction, so the target I was trying to guess literally changed each click.
+
+A Streamlit "rerun" is like the app hitting refresh on itself every single time you interact with it — press a button, move a slider, or change a dropdown and the whole Python file runs again from line one. `st.session_state` is a special dictionary that survives those reruns, like a notepad that stays on the desk even when you flip to a new page. Once you store a value in `session_state`, it is still there the next time the script runs.
+
+The fix was wrapping the `random.randint()` call in `if "secret" not in st.session_state:` so the number is only generated the very first time the app loads. After that, every rerun finds the key already in `session_state` and skips the random call entirely, keeping the secret stable for the whole game.
 
 ---
 
 ## 5. Looking ahead: your developer habits
 
-- What is one habit or strategy from this project that you want to reuse in future labs or projects?
-  - This could be a testing habit, a prompting strategy, or a way you used Git.
-- What is one thing you would do differently next time you work with AI on a coding task?
-- In one or two sentences, describe how this project changed the way you think about AI generated code.
+One habit I want to keep is writing a pytest test immediately after fixing a bug — before moving on. Having that test act as a "regression guard" meant I could confidently make later changes to the code without worrying I had accidentally broken something that was already working. That test-first mindset is something I want to bring to every future lab.
+
+Next time I work with AI on a coding task, I would read the AI's output line by line before running it instead of running first and debugging after. Several issues — like the tuple vs. string mismatch in the starter tests — would have been caught in a two-second visual review rather than a head-scratching debug session.
+
+This project changed how I see AI-generated code: it is a fast first draft, not a finished answer. The AI is great at spotting patterns and suggesting structure, but it can confidently produce code that looks right and is subtly wrong, so treating every suggestion as "probably correct, needs one more check" is the right default attitude.
